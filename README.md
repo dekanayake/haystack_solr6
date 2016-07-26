@@ -26,7 +26,7 @@ Also You can have a look on the **solrconfig.xml** available in **solr_config** 
 
 ### Configuring the schema.xml
 
-- Copy the schema/schema.xml to **TEMPLATE_FOLDER/search_configuration** folder
+- Copy the schema/schema.xml to **TEMPLATE_FOLDER/search_configuration** folder.
 The scehma.xml is the renamed **managed-schema** file in the previous step, but it has additional changes to integrate
 indexes made by haystack and your application.
 - You can deploy the new schema by running the following command
@@ -34,7 +34,7 @@ indexes made by haystack and your application.
    python manage.py build_solr_schema --filename=[SOLR base folder]/server/solr/[CORE_NAME]/conf/schema.xml && curl 'http://localhost:8983/solr/admin/cores?action=RELOAD&core=[CORE_NAME]&wt=json&indent=true'
 ```
 
-Followoing are the changes
+Following are the changes
 - The haystack related configurations , you can see this starting from the following comment
 ```xml
      <!--
