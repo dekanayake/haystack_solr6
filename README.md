@@ -20,14 +20,14 @@ https://github.com/nazariyg/Solr-5-for-django-haystack
   <processor class="solr.AddSchemaFieldsUpdateProcessorFactory">
 ```
 - Rename the **[SOLR_CORE_PATH]/conf/managed-schema** to **schema.xml**
-- Restart the solr instacnce and make sure the core is working without any issues.
+- Restart the solr instance and make sure the core is working without any issues.
 
 Also You can have a look on the **solrconfig.xml** available in **solr_config** folder.
 
 ### Configuring the schema.xml
 
-- Copy the schema/schema.xml to **TEMPLATE_FOLDER/search_configuration** folder.
-The scehma.xml is the renamed **managed-schema** file in the previous step, but it has additional changes to integrate
+- Copy the schema/schema.xml to **TEMPLATE_FOLDER/search_configuration** folder as **solr.xml**.
+The solr.xml is the renamed **managed-schema** file in the previous step, but it has additional changes to integrate
 indexes made by haystack and your application.
 - You can deploy the new schema by running the following command
 ```sh
@@ -73,3 +73,19 @@ def prepare_postedDate(self,obj):
         return obj.postedDate.strftime('%Y-%m-%dT%H:%M:%SZ')
 ```
 
+##### Failures in build_solr_schema or the curl command (Error 500 etc) or uses of solr itself
+
+Check the solr log at ```[SOLR base folder]/server/logs/solr.log```
+If you see errors related to **StopFilterFactory** with
+**enablePositionIncrements** or if you see complaints about **SortableInfField**
+then the problem is likely that you have a stale or incorrect config file where
+ schema.xml should be.
+
+**This can happen for two reasons:**
+ * Mis-Named: haystack looks for **search_configuration/solr.xml NOT schema.xml**; ensure you
+ have named it correctly
+ * Unable-To-Find: Ensure that you have edited settings.py to include the
+ appropriate TEMPLATES->DIRS entry so that haystack can find it.  
+
+If it cannot find your template for any reason...it silently provides it's own solr5.x
+ compatible one that is broken for solr6.x.
